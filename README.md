@@ -80,11 +80,11 @@ Note the different plugin locations by layout:
 
    ```bash
    # Moodle 5.0 and earlier
-   git clone https://github.com/<you>/moodle-local_userfiltersidebar.git \
+   git clone https://github.com/univie-henrikjurek/moodle-local_userfiltersidebar.git \
        local/userfiltersidebar
 
    # Moodle 5.1 and later
-   git clone https://github.com/<you>/moodle-local_userfiltersidebar.git \
+   git clone https://github.com/univie-henrikjurek/moodle-local_userfiltersidebar.git \
        public/local/userfiltersidebar
    ```
 
