@@ -1,0 +1,159 @@
+/**
+ * Presents the report builder filter form as a fixed right-hand sidebar on
+ * the administrative user list page (/admin/user.php).
+ *
+ * The layout only applies on wide screens (from the Bootstrap 'lg' breakpoint
+ * upwards). On smaller screens the standard filter dropdown is left untouched.
+ *
+ * Every rule is scoped to body#page-admin-user, the id Moodle gives the body
+ * tag on the admin user list page (page- prefix plus page type), so no other
+ * page is affected.
+ */
+
+@media (min-width: 992px) {
+    /* Sidebar width, also used to reserve the matching space in the main content. */
+    body#page-admin-user {
+        --userfiltersidebar-width: 360px;
+    }
+
+    @media (min-width: 1200px) {
+        body#page-admin-user {
+            --userfiltersidebar-width: 400px;
+        }
+    }
+
+    /*
+     * The report root sets container-type: inline-size for the container query
+     * used by the custom report card view, which does not apply to this system
+     * report. That property would make the report root the containing block for
+     * position: fixed descendants and prevent the sidebar from being viewport
+     * fixed, so it is neutralised on this page.
+     */
+    body#page-admin-user .reportbuilder-report {
+        container-type: normal; /* stylelint-disable-line */
+    }
+
+    /* Reserve space for the fixed sidebar so the user table and actions stay visible. */
+    body#page-admin-user #region-main-box {
+        padding-right: calc(var(--userfiltersidebar-width) + 1rem);
+    }
+
+    /* The filter form is permanently visible in the sidebar, the trigger is redundant. */
+    body#page-admin-user #dropdownFiltersButton {
+        display: none;
+    }
+
+    /* Turn the filter dropdown into a permanent, viewport-fixed sidebar. */
+    body#page-admin-user .reportbuilder-wrapper .filters-dropdown {
+        display: block;
+        position: fixed;
+        top: calc(var(--navbar-height, 60px) + 1px);
+        right: 0;
+        bottom: 0;
+        width: var(--userfiltersidebar-width);
+        min-width: 0;
+        margin: 0;
+        padding: 0 0 4rem;
+        overflow: hidden;
+        z-index: 900;
+        background-color: #fff;
+        border-top: 0;
+        border-right: 0;
+        border-bottom: 0;
+        border-left: 1px solid #dee2e6;
+        border-radius: 0;
+        box-shadow: -0.25rem 0 0.5rem rgba(0, 0, 0, 0.05);
+    }
+
+    /*
+     * Let the filter list fill the sidebar and scroll independently. The
+     * dropdown's padding-bottom keeps the sticky "Apply/Reset" button row
+     * (absolutely positioned at the bottom of the dropdown) clear of the
+     * scrolling content.
+     */
+    body#page-admin-user .reportbuilder-wrapper .filters-dropdown .reportbuilder-filters-sidebar {
+        height: 100%;
+        max-height: none;
+    }
+
+    /*
+     * Stack the composite filter controls (date selectors, grouped
+     * operator/value selectors) vertically. The sticky "Apply/Reset" button
+     * row keeps its horizontal layout.
+     */
+    body#page-admin-user .reportbuilder-filters-wrapper .fitem:not([data-groupname="buttonar"]) .felement .d-flex.flex-wrap {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    /* Filter rows use the full sidebar width without residual margins. */
+    body#page-admin-user .reportbuilder-filters-wrapper .fitem {
+        width: 100%;
+        margin-right: 0;
+    }
+
+    body#page-admin-user .reportbuilder-filters-wrapper input[type="text"],
+    body#page-admin-user .reportbuilder-filters-wrapper select,
+    body#page-admin-user .reportbuilder-filters-wrapper fieldset,
+    body#page-admin-user .reportbuilder-filters-wrapper .col-form-label {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Keep field heights content-driven (the sticky button row keeps its fixed height). */
+    body#page-admin-user .reportbuilder-filters-wrapper .fitem:not([data-groupname="buttonar"]) {
+        height: auto;
+    }
+
+    /*
+     * Put "Apply" (left) and "Reset all" (right) on a single line spanning the
+     * full sidebar width. The button row is absolutely positioned by the
+     * theme, so it shrinks to its content; left/right stretch it across the
+     * sidebar. Its 25% label column is hidden by the theme, so the element
+     * column is widened to 100% and the two button wrappers (which the rule
+     * above would otherwise stack vertically at 100% width) are reduced back
+     * to their content size.
+     */
+    body#page-admin-user .reportbuilder-filters-wrapper .fitem[data-groupname="buttonar"] {
+        left: 0;
+        right: 0;
+        /* Match the 1rem horizontal padding (px-3) of the filter form. */
+        padding: 0 1rem;
+    }
+
+    body#page-admin-user .reportbuilder-filters-wrapper .fitem[data-groupname="buttonar"] .col-md-9 {
+        flex: 0 0 100%;
+        max-width: 100%;
+    }
+
+    /*
+     * Neutralise the theme's full-width-labels rules, which make the last
+     * form item grow (flex: 1) and stretch its content (span: 100%): that
+     * would pin "Reset all" to the left of the space it grows into.
+     */
+    body#page-admin-user .reportbuilder-filters-wrapper .fitem[data-groupname="buttonar"] .fitem {
+        flex: 0 0 auto;
+        width: auto;
+        margin-bottom: 0;
+    }
+
+    body#page-admin-user .reportbuilder-filters-wrapper .fitem[data-groupname="buttonar"] .fitem span {
+        width: auto;
+    }
+
+    body#page-admin-user .reportbuilder-filters-wrapper .fitem[data-groupname="buttonar"] fieldset .d-flex {
+        align-items: center;
+        justify-content: space-between;
+    }
+}
+
+/* Do not print the sidebar. */
+@media print {
+    body#page-admin-user .reportbuilder-wrapper .filters-dropdown {
+        display: none;
+    }
+
+    body#page-admin-user #region-main-box {
+        padding-right: 0;
+    }
+}
